@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.feng.parklotback.mapper.FeeRecodeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="edu.feng.parklotback.pojo.FeeRecode">
+        <id column="id" property="id"/>
+        <result column="plate" property="plate"/>
+        <result column="parking_fee" property="parkingFee"/>
+        <result column="pay_time" property="payTime"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, plate, parking_fee, pay_time
+    </sql>
+
+    <select id="findAll" resultType="edu.feng.parklotback.pojo.FeeRecode">
+        SELECT * FROM fee_recode ORDER BY pay_time DESC
+    </select>
+    <select id="queryLastSevenDay" parameterType="HashMap" resultType="HashMap">
+        SELECT
+        DATE_FORMAT( pay_time, '%Y-%m-%d' ) AS date,
+        sum( parking_fee ) AS parking_fees
+        FROM
+        `fee_recode`
+        WHERE
+        (pay_time &lt; (CURDATE( ) + 1) ) AND (pay_time >= DATE_SUB( CURDATE( ), INTERVAL 6 DAY ) )
+        GROUP BY
+         date
+        ORDER BY
+         date ASC
+    </select>
+
+
+</mapper>

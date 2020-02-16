@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.feng.parklotback.mapper.ParkingRecordMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="edu.feng.parklotback.pojo.ParkingRecord">
+        <id column="id" property="id" />
+        <result column="plate" property="plate" />
+        <result column="begin_time" property="beginTime" />
+        <result column="end_time" property="endTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, plate, begin_time, end_time
+    </sql>
+
+    <select id="findByPlateAndEndTime" resultType="edu.feng.parklotback.pojo.ParkingRecord" parameterType="String">
+        SELECT * FROM parking_record WHERE end_time is NULL AND plate=#{plate}
+    </select>
+
+    <select id="findAll" resultType="edu.feng.parklotback.pojo.ParkingRecord">
+        SELECT * FROM parking_record ORDER BY if(end_time is NULL, 0, 1), end_time DESC
+    </select>
+
+</mapper>
