@@ -1,6 +1,7 @@
 package edu.feng.parklotback.controller;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import edu.feng.parklotback.badduapi.PlateAPITest;
 import edu.feng.parklotback.pojo.ClientUser;
@@ -21,6 +22,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.sql.Date;
 import java.util.List;
+
 
 /**
  * <p>
@@ -53,6 +55,7 @@ public class ParkingRecordController {
     public String parkingBegin(MultipartFile file) throws Exception {
         String folder = "/Users/feng/Downloads/parkingBeginImg";
         File imageFolder = new File(folder);
+        String imgURL = "";
 
         System.out.println(file.getOriginalFilename());
 
@@ -67,12 +70,13 @@ public class ParkingRecordController {
         try {
             // 将f放到文件去
             file.transferTo(f);
-            String imgURL = "http://localhost:8443/api/file/" + f.getName();
+            imgURL = "http://localhost:8443/api/file/" + f.getName();
 //            return imgURL;
         } catch (IOException e) {
             e.printStackTrace();
 //            return "";
         }
+        // 车牌识别
         PlateAPITest plateAPITest = new PlateAPITest();
         String plate = plateAPITest.plateDetect(path);
 
@@ -84,7 +88,7 @@ public class ParkingRecordController {
 
         System.out.println("协议客户？" + clientUser);
         //是协议客户，
-        if (clientUser != null){
+        if (clientUser != null) {
             java.sql.Date beginTime1 = new java.sql.Date(new java.util.Date().getTime());
 
             System.out.println("beginTimee:" + beginTime1);
@@ -93,7 +97,12 @@ public class ParkingRecordController {
             parkingRecord.setPlate(plate);
             parkingRecord.setBeginTime(beginTime1);
             parkingRecordService.save(parkingRecord);
-            return plate+"  协议客户 ";
+            return plate + "  协议客户 ";
+        }
+
+
+        if (plate.equals("fail")) {
+            return imgURL;
         }
 
 
@@ -131,6 +140,7 @@ public class ParkingRecordController {
     public String parkingEnd(MultipartFile file) throws Exception {
         String folder = "/Users/feng/Downloads/parkingEndImg";
         File imageFolder = new File(folder);
+        String imgURL = "";
 
         System.out.println(file.getOriginalFilename());
 
@@ -142,14 +152,13 @@ public class ParkingRecordController {
 
         String path = "/Users/feng/Downloads/parkingEndImg" + "/" + f.getName();
         System.out.println("最终path：" + path);
-        System.out.println("f:  "+f);
-        System.out.println("file: " +file);
+        System.out.println("f:  " + f);
+        System.out.println("file: " + file);
         System.out.println("file.getName:" + file.getOriginalFilename());
         try {
             // 将f放到文件去
             file.transferTo(f);
-            String imgURL = "http://localhost:8443/api/file/" + f.getName();
-
+            imgURL = "http://localhost:8443/api/file/" + f.getName();
 
 
 //            return imgURL;
@@ -166,16 +175,20 @@ public class ParkingRecordController {
         ClientUser clientUser = clientUserService.getOne(queryWrapper1);
         System.out.println("协议客户？" + clientUser);
 
+        if (plate.equals("fail")) {
+            return imgURL;
+        }
+
         // 是协议客户，且日期大于当前日期
-        if (clientUser != null){
+        if (clientUser != null) {
             //时间模块
             java.util.Date date = new java.util.Date();//获得系统时间.
             SimpleDateFormat sdf = new SimpleDateFormat(" yyyy-MM-dd HH:mm:ss ");
             String currentTime = sdf.format(date);
             java.sql.Timestamp endTime1 = Timestamp.valueOf(currentTime);
-            System.out.println("比较结果"+clientUser.getClientEnd().compareTo(endTime1));
-            if (clientUser.getClientEnd().compareTo(endTime1)>0){
-                System.out.println("协议到期时间"+clientUser.getClientEnd());
+            System.out.println("比较结果" + clientUser.getClientEnd().compareTo(endTime1));
+            if (clientUser.getClientEnd().compareTo(endTime1) > 0) {
+                System.out.println("协议到期时间" + clientUser.getClientEnd());
                 System.out.println("当前时间" + endTime1);
                 System.out.println("beginTimee1:" + endTime1);
                 // 存入数据库。停车记录
@@ -185,11 +198,11 @@ public class ParkingRecordController {
 //                // 出库记录，从数据库中查
 //                // 出库模块
 //                ParkingRecord parkingEndRecord = parkingRecordService.getOne(queryWrapper);
-                ParkingRecord parkingEndRecord= parkingRecordService.findByPlateAndEndTime(plate);
+                ParkingRecord parkingEndRecord = parkingRecordService.findByPlateAndEndTime(plate);
                 System.out.println("协议recode" + parkingEndRecord);
                 parkingEndRecord.setEndTime(endTime1);
                 parkingRecordService.saveOrUpdate(parkingEndRecord);
-                return plate+"  协议客户 ";
+                return plate + "  协议客户 ";
             }
         }
 
@@ -213,7 +226,7 @@ public class ParkingRecordController {
 //            // 出库记录，从数据库中查
 //            // 出库模块
 //            ParkingRecord parkingEndRecord = parkingRecordService.getOne(queryWrapper);
-            ParkingRecord parkingEndRecord= parkingRecordService.findByPlateAndEndTime(plate);
+            ParkingRecord parkingEndRecord = parkingRecordService.findByPlateAndEndTime(plate);
             parkingEndRecord.setEndTime(endTime);
             parkingRecordService.saveOrUpdate(parkingEndRecord);
 
@@ -235,7 +248,7 @@ public class ParkingRecordController {
                 String deleteURL = "/Users/feng/Downloads/parkingBeginImg" + "/" + f.getName();
                 File deleteFile = new File(deleteURL);
                 deleteFile.delete();
-            }catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -299,15 +312,143 @@ public class ParkingRecordController {
     @CrossOrigin
     @PostMapping("/api/parking/gett")
     @ResponseBody
-    public ParkingRecord findByPlatAndTime(String plate){
+    public ParkingRecord findByPlatAndTime(String plate) {
         return parkingRecordService.findByPlateAndEndTime(plate);
     }
 
     @CrossOrigin
     @GetMapping("/api/parking/getall")
     @ResponseBody
-    public List<ParkingRecord> findAll(){
+    public List<ParkingRecord> findAll() {
         return parkingRecordService.findAll();
+    }
+
+    @CrossOrigin
+    @PostMapping("/api/parking/upload/begin")
+    @ResponseBody
+    public String uploadBegin(@RequestBody String plate1) {
+
+        JSONObject jsonObject = (JSONObject) JSONObject.parse(plate1);
+        String plate = jsonObject.getString("plate");
+        System.out.println("上传的车牌号" + plate + "解析前数据" + plate1);
+        // 协议客户进场
+        QueryWrapper<ClientUser> queryWrapper1 = new QueryWrapper<ClientUser>();
+        queryWrapper1.like("client_plate", plate);
+        ClientUser clientUser = clientUserService.getOne(queryWrapper1);
+
+        System.out.println("协议客户？" + clientUser);
+        //是协议客户，
+        if (clientUser != null) {
+            java.sql.Date beginTime1 = new java.sql.Date(new java.util.Date().getTime());
+
+            System.out.println("beginTimee:" + beginTime1);
+            // 存入数据库。停车记录
+            ParkingRecord parkingRecord = new ParkingRecord();
+            parkingRecord.setPlate(plate);
+            parkingRecord.setBeginTime(beginTime1);
+            parkingRecordService.save(parkingRecord);
+            return plate + "  协议客户 ";
+        }
+        System.out.println(plate);
+        java.sql.Date beginTime = new java.sql.Date(new java.util.Date().getTime());
+
+        System.out.println("beginTimee:" + beginTime);
+        // 存入数据库。停车记录
+        ParkingRecord parkingRecord = new ParkingRecord();
+        parkingRecord.setPlate(plate);
+        parkingRecord.setBeginTime(beginTime);
+        parkingRecordService.save(parkingRecord);
+
+        // 车位变化
+        parkingSpaceService.carEnter();
+
+        System.out.println("最终返回前端" + plate);
+        return new String(plate);
+    }
+
+
+    @CrossOrigin
+    @PostMapping("/api/parking/upload/end")
+    @ResponseBody
+    public String uploadEnd(@RequestBody String plate1) {
+
+        JSONObject jsonObject = (JSONObject) JSONObject.parse(plate1);
+        String plate = jsonObject.getString("plate");
+        System.out.println("上传的车牌号" + plate + "解析前数据" + plate1);
+        // 协议客户出场
+        QueryWrapper<ClientUser> queryWrapper1 = new QueryWrapper<ClientUser>();
+        queryWrapper1.like("client_plate", plate);
+        ClientUser clientUser = clientUserService.getOne(queryWrapper1);
+        System.out.println("协议客户？" + clientUser);
+
+        // 是协议客户，且日期大于当前日期
+        if (clientUser != null) {
+            //时间模块
+            java.util.Date date = new java.util.Date();//获得系统时间.
+            SimpleDateFormat sdf = new SimpleDateFormat(" yyyy-MM-dd HH:mm:ss ");
+            String currentTime = sdf.format(date);
+            java.sql.Timestamp endTime1 = Timestamp.valueOf(currentTime);
+            System.out.println("比较结果" + clientUser.getClientEnd().compareTo(endTime1));
+            if (clientUser.getClientEnd().compareTo(endTime1) > 0) {
+                System.out.println("协议到期时间" + clientUser.getClientEnd());
+                System.out.println("当前时间" + endTime1);
+                System.out.println("beginTimee1:" + endTime1);
+                // 存入数据库。停车记录
+                System.out.println("endTime1:" + endTime1);
+
+                // 出库记录，从数据库中查
+                // 出库模块
+
+                ParkingRecord parkingEndRecord = parkingRecordService.findByPlateAndEndTime(plate);
+                System.out.println("协议recode" + parkingEndRecord);
+                parkingEndRecord.setEndTime(endTime1);
+                parkingRecordService.saveOrUpdate(parkingEndRecord);
+                return plate + "  协议客户 ";
+            }
+        }
+
+        // 识别成功就不等于fail
+        System.out.println(plate);
+
+        // 时间处理模块
+        // util里的时间可能不行
+        java.util.Date date = new java.util.Date();//获得系统时间.
+        SimpleDateFormat sdf = new SimpleDateFormat(" yyyy-MM-dd HH:mm:ss ");
+        String currentTime = sdf.format(date);
+        java.sql.Timestamp endTime = Timestamp.valueOf(currentTime);
+
+
+        System.out.println("endTime:" + endTime);
+        ParkingRecord parkingEndRecord = parkingRecordService.findByPlateAndEndTime(plate);
+        parkingEndRecord.setEndTime(endTime);
+        parkingRecordService.saveOrUpdate(parkingEndRecord);
+
+        // 结算模块 5元/小时
+        FeeRecode feeRecode = new FeeRecode();
+        feeRecode.setPlate(plate);
+        feeRecode.setPayTime(endTime);
+        float fee = computationFee(parkingEndRecord.getBeginTime(), parkingEndRecord.getEndTime());
+        feeRecode.setParkingFee(fee);
+        System.out.println("fee Recode" + feeRecode);
+        feeRecodeService.save(feeRecode);
+
+        // 车位变化
+        parkingSpaceService.carOut();
+
+
+        //把车牌删除
+//        try {
+//            String deleteURL = "/Users/feng/Downloads/parkingBeginImg" + "/" + f.getName();
+//            File deleteFile = new File(deleteURL);
+//            deleteFile.delete();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+        System.out.println("最终返回前端" + plate);
+        if (clientUser != null) {
+            return new String(plate + " 您的协议已过期， 请缴费");
+        }
+        return new String(plate);
     }
 }
 
