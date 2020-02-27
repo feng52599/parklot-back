@@ -12,7 +12,7 @@ import java.util.Map;
  * </p>
  *
  * @author feng
- * @since 2020-02-14
+ * @since 2020-02-01
  */
 public interface ParkingRecordService extends IService<ParkingRecord> {
     public ParkingRecord findByPlateAndEndTime(String plate);

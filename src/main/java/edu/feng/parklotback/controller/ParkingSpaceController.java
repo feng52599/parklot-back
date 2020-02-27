@@ -35,4 +35,11 @@ public class ParkingSpaceController {
     public List<ParkingSpace> getSpace() {
         return parkingSpaceService.getSpace();
     }
+
+    @CrossOrigin
+    @GetMapping("/api/space/getbookspace")
+    @ResponseBody
+    public Integer getBookedSpace() {
+        return parkingSpaceService.getBookedSpace();
+    }
 }

@@ -15,7 +15,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author feng
- * @since 2020-02-15
+ * @since 2020-01-15
  */
 @TableName("parking_space")
 @Data
@@ -43,5 +43,10 @@ public class ParkingSpace implements Serializable {
      */
     private Integer allSpace;
 
+    /**
+     * 预约车位
+     */
+
+    private Integer bookedSpace;
 
 }

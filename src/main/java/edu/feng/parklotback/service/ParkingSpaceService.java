@@ -11,7 +11,7 @@ import java.util.List;
  * </p>
  *
  * @author feng
- * @since 2020-02-15
+ * @since 2020-02-01
  */
 public interface ParkingSpaceService extends IService<ParkingSpace> {
     public void carEnter();
@@ -19,4 +19,6 @@ public interface ParkingSpaceService extends IService<ParkingSpace> {
     List<ParkingSpace> findAll();
 
     List<ParkingSpace> getSpace();
+
+    Integer getBookedSpace();
 }

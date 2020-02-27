@@ -15,7 +15,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author feng
- * @since 2020-02-15
+ * @since 2020-01-15
  */
 
 @TableName("device")

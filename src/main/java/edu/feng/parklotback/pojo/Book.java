@@ -7,7 +7,7 @@ import javax.persistence.*;
  * @program: parklot-back
  * @description: 图书类
  * @author: feng
- * @create: 2020-02-12 10:30
+ * @create: 2020-01-12 10:30
  */
 
 

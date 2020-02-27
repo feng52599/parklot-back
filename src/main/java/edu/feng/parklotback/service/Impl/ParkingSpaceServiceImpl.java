@@ -16,7 +16,7 @@ import java.util.List;
  * </p>
  *
  * @author feng
- * @since 2020-02-15
+ * @since 2020-02-05
  */
 @Service
 @Transactional
@@ -49,5 +49,10 @@ public class ParkingSpaceServiceImpl extends ServiceImpl<ParkingSpaceMapper, Par
     @Override
     public List<ParkingSpace> getSpace() {
         return parkingSpaceMapper.getSpace();
+    }
+
+    @Override
+    public Integer getBookedSpace() {
+        return parkingSpaceMapper.getBookedSpace();
     }
 }

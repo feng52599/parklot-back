@@ -9,7 +9,7 @@ import java.util.List;
  * @program: parklot-back
  * @description:
  * @author: feng
- * @create: 2020-02-12 20:31
+ * @create: 2020-02-01 20:31
  */
 public interface ClientUserService extends IService<ClientUser> {
     List<ClientUser> findAll();

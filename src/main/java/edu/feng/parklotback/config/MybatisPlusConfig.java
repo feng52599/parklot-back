@@ -13,11 +13,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * @author dalaoyang
+ * @author geng
  * @Description
- * @project springboot_learn
- * @package com.dalaoyang.config
- * @email yangyang@dalaoyang.cn
+ * @project springboot
  * @date 2018/7/20
  */
 @Configuration

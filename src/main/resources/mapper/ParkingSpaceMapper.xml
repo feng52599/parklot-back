@@ -23,5 +23,8 @@
         SELECT remaining_space FROM parking_space
     </select>
 
+    <select id="getBookedSpace" resultType="Integer">
+        SELECT booked_space FROM parking_space
+    </select>
 
 </mapper>

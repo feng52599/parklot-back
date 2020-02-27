@@ -30,7 +30,7 @@ import java.util.List;
  * </p>
  *
  * @author feng
- * @since 2020-02-14
+ * @since 2020-01-14
  */
 @Controller
 //@RequestMapping("/parkingRecord")
@@ -52,7 +52,7 @@ public class ParkingRecordController {
     @CrossOrigin
     @PostMapping("/api/parking/begin")
     @ResponseBody
-    public String parkingBegin(MultipartFile file) throws Exception {
+    public String parkingBegin(@RequestParam(value = "file",required = false)MultipartFile file) throws Exception {
         String folder = "/Users/feng/Downloads/parkingBeginImg";
         File imageFolder = new File(folder);
         String imgURL = "";
@@ -65,17 +65,37 @@ public class ParkingRecordController {
         if (!f.getParentFile().exists())
             f.getParentFile().mkdirs();
 
+        // 识别用的path
         String path = "/Users/feng/Downloads/parkingBeginImg" + "/" + f.getName();
+
+//        // 同步存储
+//        String toImageFloder = "/Users/feng/Downloads/毕业车牌测试";
+//        File aimageFolder = new File(folder);
+//        File imageF = new File(aimageFolder, file.getOriginalFilename());
+//        if (!imageF.getParentFile().exists())
+//            imageF.getParentFile().mkdirs();
+
+
+
+
+
         System.out.println("最终path：" + path);
         try {
             // 将f放到文件去
             file.transferTo(f);
+
+//            // 将图片同步存到毕业车牌测试里
+//            file.transferTo(imageF);
+
+
             imgURL = "http://localhost:8443/api/file/" + f.getName();
 //            return imgURL;
         } catch (IOException e) {
             e.printStackTrace();
 //            return "";
         }
+        System.out.println("识别path" + path);
+
         // 车牌识别
         PlateAPITest plateAPITest = new PlateAPITest();
         String plate = plateAPITest.plateDetect(path);
@@ -243,14 +263,14 @@ public class ParkingRecordController {
             parkingSpaceService.carOut();
 
 
-            //把车牌删除
-            try {
-                String deleteURL = "/Users/feng/Downloads/parkingBeginImg" + "/" + f.getName();
-                File deleteFile = new File(deleteURL);
-                deleteFile.delete();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+//            //把车牌删除
+//            try {
+//                String deleteURL = "/Users/feng/Downloads/parkingBeginImg" + "/" + f.getName();
+//                File deleteFile = new File(deleteURL);
+//                deleteFile.delete();
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
 
         } else {
             System.out.println("图片识别失败");
@@ -323,6 +343,8 @@ public class ParkingRecordController {
         return parkingRecordService.findAll();
     }
 
+
+    // 车牌纠错里
     @CrossOrigin
     @PostMapping("/api/parking/upload/begin")
     @ResponseBody

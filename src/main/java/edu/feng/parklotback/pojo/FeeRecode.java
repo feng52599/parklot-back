@@ -16,7 +16,7 @@ import java.util.Date;
  * </p>
  *
  * @author feng
- * @since 2020-02-15
+ * @since 2020-01-15
  */
 
 @TableName("fee_recode")
