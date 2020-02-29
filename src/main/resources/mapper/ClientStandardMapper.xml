@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.feng.parklotback.mapper.ClientStandardMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="edu.feng.parklotback.pojo.ClientStandard">
+        <id column="id" property="id" />
+        <result column="client_type" property="clientType" />
+        <result column="client_fee" property="clientFee" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, client_type, client_fee
+    </sql>
+
+    <select id="findAll" resultType="edu.feng.parklotback.pojo.ClientStandard">
+        SELECT * FROM client_standard
+    </select>
+</mapper>

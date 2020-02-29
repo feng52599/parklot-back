@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.feng.parklotback.mapper.BookingMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="edu.feng.parklotback.pojo.Booking">
+        <id column="id" property="id" />
+        <result column="booking_time" property="bookingTime" />
+        <result column="plate" property="plate" />
+        <result column="phone" property="phone" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, booking_time, plate, phone
+    </sql>
+
+    <delete id="deleteByPlate" parameterType="Integer">
+        delete from booking where id = #{id}
+   </delete>
+
+</mapper>
