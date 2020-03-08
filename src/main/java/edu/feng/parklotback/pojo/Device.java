@@ -47,6 +47,7 @@ public class Device implements Serializable {
      */
     private Boolean isUsed;
 
+
     /**
      * 备注
      */
