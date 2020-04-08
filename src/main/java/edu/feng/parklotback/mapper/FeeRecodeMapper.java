@@ -22,4 +22,7 @@ import java.util.Map;
 public interface FeeRecodeMapper extends BaseMapper<FeeRecode> {
     List<FeeRecode> findAll();
     List<Map<String, Object>> queryLastSevenDay();
+    Integer queryTodayIn();
+    Integer queryCurrentMonthIn();
+    Integer queryCurrentYearIn();
 }

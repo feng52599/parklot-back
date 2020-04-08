@@ -58,7 +58,7 @@ public class PlateAPITest {
     //使用token调用API
     public static String plateDetect(String parkingPath){
 
-        String token = "24.de607104ea4f86d8908ac291dddc6978.2592000.1584238589.282335-18468375";
+        String token = "24.3a1365e4af5c3fb808a7b47fcd537c0a.2592000.1586849064.282335-18468375";
 
         String Filepath = parkingPath;
         String image = Base64ImageUtils.GetImageStrFromPath(Filepath);

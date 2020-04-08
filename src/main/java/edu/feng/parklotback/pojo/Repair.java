@@ -25,7 +25,6 @@ import java.util.Date;
 @Setter
 public class Repair implements Serializable {
 
-    private static final long serialVersionUID = 1L;
 
     /**
      * 维修编号
@@ -49,14 +48,34 @@ public class Repair implements Serializable {
     private String submitMan;
 
     /**
-     * 备注
+     * 维修内容
      */
     private String remark;
 
     /**
-     * 0-待维修 1-已维修
+     * 0-待维修 1-正在维修 2-维修完成
      */
-    private Boolean status;
+    private Integer status;
+
+    /**
+     * 维修时间
+     */
+    private Date repairTime;
+
+    /**
+     * 维修人
+     */
+    private String repairMan;
+    /**
+     * 维修人员电话
+     */
+    private String repairPhone;
+    /**
+     * 维修金额
+     */
+    private Float repairFee;
+
+
 
 
 }

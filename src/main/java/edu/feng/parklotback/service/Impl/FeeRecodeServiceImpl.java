@@ -34,5 +34,20 @@ public class FeeRecodeServiceImpl extends ServiceImpl<FeeRecodeMapper, FeeRecode
         return feeRecodeMapper.queryLastSevenDay();
     }
 
+    @Override
+    public Integer queryTodayIn() {
+        return feeRecodeMapper.queryTodayIn();
+    }
+
+    @Override
+    public Integer queryCurrentMonthIn() {
+        return feeRecodeMapper.queryCurrentMonthIn();
+    }
+
+    @Override
+    public Integer queryCurrentYearIn() {
+        return feeRecodeMapper.queryCurrentYearIn();
+    }
+
 
 }

@@ -19,5 +19,7 @@ public interface FeeRecodeService extends IService<FeeRecode> {
     List<FeeRecode> findAll();
 
     List<Map<String, Object>> queryLastSevenDay();
-
+    Integer queryTodayIn();
+    Integer queryCurrentMonthIn();
+    Integer queryCurrentYearIn();
 }

@@ -18,6 +18,7 @@
     <select id="findAll" resultType="edu.feng.parklotback.pojo.FeeRecode">
         SELECT * FROM fee_recode ORDER BY pay_time DESC
     </select>
+<!--    过去七天每天收入总额-->
     <select id="queryLastSevenDay" parameterType="HashMap" resultType="HashMap">
         SELECT
         DATE_FORMAT( pay_time, '%Y-%m-%d' ) AS date,
@@ -30,6 +31,18 @@
          date
         ORDER BY
          date ASC
+    </select>
+
+    <select id="queryTodayIn" resultType="Integer">
+        select SUM(parking_fee) from fee_recode where DATEDIFF(pay_time,NOW())=0
+    </select>
+
+    <select id="queryCurrentMonthIn" resultType="Integer">
+        SELECT  SUM(parking_fee) FROM fee_recode WHERE DATE_FORMAT(pay_time,'%Y%m') = DATE_FORMAT(CURDATE(),'%Y%m');
+    </select>
+
+    <select id="queryCurrentYearIn" resultType="Integer">
+        SELECT SUM(parking_fee) FROM fee_recode WHERE YEAR(pay_time)=YEAR(NOW());
     </select>
 
 

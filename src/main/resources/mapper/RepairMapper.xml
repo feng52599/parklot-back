@@ -17,6 +17,6 @@
     </sql>
 
     <select id="findAll" resultType="edu.feng.parklotback.pojo.Repair">
-        SELECT * FROM repair
+        SELECT * FROM repair order by submit_time desc
     </select>
 </mapper>
