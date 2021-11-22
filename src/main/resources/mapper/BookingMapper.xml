@@ -16,7 +16,7 @@
     </sql>
 
     <delete id="deleteByPlate" parameterType="Integer">
-        delete from booking where id = #{id}
-   </delete>
+        delete from booking where id = #{id}
+    </delete>
 
 </mapper>

@@ -5,6 +5,9 @@ import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.config.annotation.*;
 
+/**
+ * 拦截器处理
+ */
 @SpringBootConfiguration
 public class MyWebConfigurer implements WebMvcConfigurer {
 
