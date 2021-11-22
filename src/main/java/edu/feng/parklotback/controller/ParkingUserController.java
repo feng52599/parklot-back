@@ -62,6 +62,7 @@ public class ParkingUserController {
         System.out.println("useriddddd" + parkingUser.getId() + "name" + parkingUser.getUsername());
         if ((null == parkingUser.getId() || (parkingUser.getId() == 0))){
             parkingUserService.save(parkingUser);
+            System.out.println("hello User");
         } else {
                 parkingUserService.updateById(parkingUser);
         }
