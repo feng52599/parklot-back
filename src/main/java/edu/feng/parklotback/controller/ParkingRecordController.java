@@ -52,7 +52,7 @@ public class ParkingRecordController {
     @CrossOrigin
     @PostMapping("/api/parking/begin")
     @ResponseBody
-    public String parkingBegin(@RequestParam(value = "file",required = false)MultipartFile file) throws Exception {
+    public String parkingBegin(@RequestParam(value = "file", required = false) MultipartFile file) throws Exception {
         String folder = "/Users/feng/Downloads/parkingBeginImg";
         File imageFolder = new File(folder);
         String imgURL = "";
@@ -76,9 +76,6 @@ public class ParkingRecordController {
 //            imageF.getParentFile().mkdirs();
 
 
-
-
-
         System.out.println("最终path：" + path);
         try {
             // 将f放到文件去
@@ -98,36 +95,35 @@ public class ParkingRecordController {
 
         // 车牌识别
         PlateAPITest plateAPITest = new PlateAPITest();
-        String plate = plateAPITest.plateDetect(path);
+        String plate = PlateAPITest.plateDetect(path);
+        System.out.println("plate值：" + plate);
 
 
-        // 协议客户进场
-        QueryWrapper<ClientUser> queryWrapper1 = new QueryWrapper<ClientUser>();
-        queryWrapper1.like("client_plate", plate);
-        ClientUser clientUser = clientUserService.getOne(queryWrapper1);
+        if (plate.equals("282102")) {
+            return "图片中无车牌";
+        } else if (plate.equals("282103") || plate.equals("282810")) {
+            return "车牌识别失败";
+        } else {
 
-        System.out.println("协议客户？" + clientUser);
-        //是协议客户，
-        if (clientUser != null) {
-            java.sql.Date beginTime1 = new java.sql.Date(new java.util.Date().getTime());
+            // 协议客户进场
+            QueryWrapper<ClientUser> queryWrapper1 = new QueryWrapper<ClientUser>();
+            queryWrapper1.like("client_plate", plate);
+            ClientUser clientUser = clientUserService.getOne(queryWrapper1);
 
-            System.out.println("beginTimee:" + beginTime1);
-            // 存入数据库。停车记录
-            ParkingRecord parkingRecord = new ParkingRecord();
-            parkingRecord.setPlate(plate);
-            parkingRecord.setBeginTime(beginTime1);
-            parkingRecordService.save(parkingRecord);
-            return plate + "  协议客户 ";
-        }
+            System.out.println("协议客户？" + clientUser);
+            //是协议客户，
+            if (clientUser != null) {
+                java.sql.Date beginTime1 = new java.sql.Date(new java.util.Date().getTime());
 
+                System.out.println("beginTimee:" + beginTime1);
+                // 存入数据库。停车记录
+                ParkingRecord parkingRecord = new ParkingRecord();
+                parkingRecord.setPlate(plate);
+                parkingRecord.setBeginTime(beginTime1);
+                parkingRecordService.save(parkingRecord);
+                return plate + "  协议客户 ";
+            }
 
-        if (plate.equals("fail")) {
-            return imgURL;
-        }
-
-
-        // 识别成功就不等于fail
-        if (!plate.equals("fail")) {
             System.out.println(plate);
             // util里的时间可能不行
 //            Date date = new Date();//获得系统时间.
@@ -145,8 +141,6 @@ public class ParkingRecordController {
 
             // 车位变化
             parkingSpaceService.carEnter();
-        } else {
-            System.out.println("图片识别失败");
         }
 
         System.out.println("最终返回前端" + plate);
@@ -189,46 +183,43 @@ public class ParkingRecordController {
         PlateAPITest plateAPITest = new PlateAPITest();
         String plate = plateAPITest.plateDetect(path);
 
-        // 协议客户出场
-        QueryWrapper<ClientUser> queryWrapper1 = new QueryWrapper<ClientUser>();
-        queryWrapper1.like("client_plate", plate);
-        ClientUser clientUser = clientUserService.getOne(queryWrapper1);
-        System.out.println("协议客户？" + clientUser);
+        System.out.println("plate值：" + plate);
+        ClientUser clientUser = null;
 
-        if (plate.equals("fail")) {
-            return imgURL;
-        }
-
-        // 是协议客户，且日期大于当前日期
-        if (clientUser != null) {
-            //时间模块
-            java.util.Date date = new java.util.Date();//获得系统时间.
-            SimpleDateFormat sdf = new SimpleDateFormat(" yyyy-MM-dd HH:mm:ss ");
-            String currentTime = sdf.format(date);
-            java.sql.Timestamp endTime1 = Timestamp.valueOf(currentTime);
-            System.out.println("比较结果" + clientUser.getClientEnd().compareTo(endTime1));
-            if (clientUser.getClientEnd().compareTo(endTime1) > 0) {
-                System.out.println("协议到期时间" + clientUser.getClientEnd());
-                System.out.println("当前时间" + endTime1);
-                System.out.println("beginTimee1:" + endTime1);
-                // 存入数据库。停车记录
-                System.out.println("endTime1:" + endTime1);
-//                QueryWrapper<ParkingRecord> queryWrapper = new QueryWrapper<ParkingRecord>();
-//                queryWrapper.like("plate", plate);
-//                // 出库记录，从数据库中查
-//                // 出库模块
-//                ParkingRecord parkingEndRecord = parkingRecordService.getOne(queryWrapper);
-                ParkingRecord parkingEndRecord = parkingRecordService.findByPlateAndEndTime(plate);
-                System.out.println("协议recode" + parkingEndRecord);
-                parkingEndRecord.setEndTime(endTime1);
-                parkingRecordService.saveOrUpdate(parkingEndRecord);
-                return plate + "  协议客户 ";
-            }
-        }
-
-        // 识别成功就不等于fail
-        if (!plate.equals("fail")) {
+        if ("282102".equals(plate)) {
+            return "图片中无车牌";
+        } else if ("282103".equals(plate) || "282810".equals(plate)) {
+            return "车牌识别失败";
+        } else {
             System.out.println(plate);
+            // 协议客户出场
+            QueryWrapper<ClientUser> queryWrapper1 = new QueryWrapper<ClientUser>();
+            queryWrapper1.like("client_plate", plate);
+            clientUser = clientUserService.getOne(queryWrapper1);
+            System.out.println("协议客户？" + clientUser);
+
+            // 是协议客户，且日期大于当前日期
+            if (clientUser != null) {
+                //时间模块
+                java.util.Date date = new java.util.Date();//获得系统时间.
+                SimpleDateFormat sdf = new SimpleDateFormat(" yyyy-MM-dd HH:mm:ss ");
+                String currentTime = sdf.format(date);
+                java.sql.Timestamp endTime1 = Timestamp.valueOf(currentTime);
+                System.out.println("比较结果" + clientUser.getClientEnd().compareTo(endTime1));
+                if (clientUser.getClientEnd().compareTo(endTime1) > 0) {
+                    System.out.println("协议到期时间" + clientUser.getClientEnd());
+                    System.out.println("当前时间" + endTime1);
+                    System.out.println("beginTimee1:" + endTime1);
+                    // 存入数据库。停车记录
+                    System.out.println("endTime1:" + endTime1);
+
+                    ParkingRecord parkingEndRecord = parkingRecordService.findByPlateAndEndTime(plate);
+                    System.out.println("协议recode" + parkingEndRecord);
+                    parkingEndRecord.setEndTime(endTime1);
+                    parkingRecordService.saveOrUpdate(parkingEndRecord);
+                    return plate + "  协议客户 ";
+                }
+            }
 
             // 时间处理模块
             // util里的时间可能不行
@@ -272,8 +263,6 @@ public class ParkingRecordController {
 //                e.printStackTrace();
 //            }
 
-        } else {
-            System.out.println("图片识别失败");
         }
 
         System.out.println("最终返回前端" + plate);

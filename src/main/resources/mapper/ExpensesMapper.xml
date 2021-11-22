@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.feng.parklotback.mapper.ExpensesMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="edu.feng.parklotback.pojo.Expenses">
+        <id column="id" property="id"/>
+        <result column="summary" property="summary"/>
+        <result column="expenses_time" property="expensesTime"/>
+        <result column="expenses_fee" property="expensesFee"/>
+        <result column="remark" property="remark"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, summary, expenses_time, expenses_fee, remark
+    </sql>
+
+    <select id="findAll" resultType="edu.feng.parklotback.pojo.Expenses">
+        SELECT * FROM expenses
+    </select>
+
+    <select id="queryTodayOut" resultType="Integer">
+        select SUM(expenses_fee) from expenses where DATEDIFF(expenses_time,NOW())=0
+    </select>
+
+    <select id="queryCurrentMonthOut" resultType="Integer">
+        SELECT  SUM(expenses_fee) FROM expenses WHERE DATE_FORMAT(expenses_time,'%Y%m') = DATE_FORMAT(CURDATE(),'%Y%m');
+    </select>
+    <select id="queryCurrentYearOut" resultType="Integer">
+        SELECT SUM(expenses_fee) FROM expenses WHERE YEAR(expenses_time)=YEAR(NOW());
+    </select>
+
+</mapper>

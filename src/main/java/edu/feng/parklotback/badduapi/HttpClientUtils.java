@@ -287,10 +287,12 @@ public class HttpClientUtils{
         String APPID ="10201425"; //管理中心获得
 
         //百度人脸识别应用apikey
-        String API_KEY = "WVsGWvDxyn55hW8P0UR8shbo"; //管理中心获得
+//        String API_KEY = "WVsGWvDxyn55hW8P0UR8shbo"; //管理中心获得
+        String API_KEY = "UrMsET9AoHSwQRglHe1aUazb"; //管理中心获得
 
         //百度人脸识别应用sercetkey
-        String SERCET_KEY = "z0uSr16LGyTNIMRRnP6f8jCLMLXAYkIj"; //管理中心获得
+//        String SERCET_KEY = "z0uSr16LGyTNIMRRnP6f8jCLMLXAYkIj"; //管理中心获得
+        String SERCET_KEY = "KEeLuqsmCt93dfzuqNzMetH25oB42aro"; //管理中心获得
 
         //百度人脸识别token 有效期一个月
         String TOKEN = null;

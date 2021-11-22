@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.feng.parklotback.mapper.RepairManMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="edu.feng.parklotback.pojo.RepairMan">
+        <id column="id" property="id"/>
+        <result column="repair_name" property="repairName"/>
+        <result column="repair_phone" property="repairPhone"/>
+        <result column="repair_username" property="repairUsername"/>
+        <result column="repair_password" property="repairPassword"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, repair_name, repair_phone, repair_username, repair_password
+    </sql>
+
+    <resultMap id="RepairManResult" type="edu.feng.parklotback.pojo.RepairMan">
+        <id column="id" property="id" javaType="Integer"/>
+        <result column="username" property="username" javaType="String"/>
+        <result column="password" property="password" javaType="String"/>
+        <!--        <result column="remark" property="remark" javaType="String"/>-->
+        <!--        <result column="role_id" property="roleId" javaType="Integer"/>-->
+    </resultMap>
+
+    <select id="findUserByNameAndPassword" parameterType="String" resultMap="RepairManResult">
+        select u.id, u.username, u.password from repair_man u where u.username = #{username} and u.password = #{password};
+    </select>
+
+    <select id="findUserByNameAndPasswordToSess" parameterType="String"
+            resultType="edu.feng.parklotback.pojo.RepairMan">
+        select * from repair_man u where u.username = #{username} and u.password = #{password};
+    </select>
+</mapper>

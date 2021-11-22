@@ -58,7 +58,8 @@ public class PlateAPITest {
     //使用token调用API
     public static String plateDetect(String parkingPath){
 
-        String token = "24.3a1365e4af5c3fb808a7b47fcd537c0a.2592000.1586849064.282335-18468375";
+//        String token = "24.a6b7ada46c4dec8283c7aef878efdf12.2592000.1589511212.282335-10201425";
+        String token = "24.71649ef4604117bc78a1bbfcf17c261f.2592000.1589511816.282335-18468375";
 
         String Filepath = parkingPath;
         String image = Base64ImageUtils.GetImageStrFromPath(Filepath);
@@ -70,6 +71,7 @@ public class PlateAPITest {
         Map<String, String> bodys = new HashMap<String, String>();
         bodys.put("image", image);
         bodys.put("face_fields", "age,beauty,expression,gender,glasses,race,qualities");
+        JSONObject jsonObjectCopy = null;
 
         try {
             CloseableHttpResponse response =  HttpClientUtils.doHttpsPost(url,headers,bodys);
@@ -77,8 +79,10 @@ public class PlateAPITest {
             String s = HttpClientUtils.toString(response);
             System.out.println("response："+ s);
             System.out.println("s" + s);
-             JSONObject jsonObject = JSONObject.parseObject(s);
+            JSONObject jsonObject = JSONObject.parseObject(s);
+            jsonObjectCopy = jsonObject;
             System.out.println("jsonObject"+jsonObject);
+            System.out.println("err"+jsonObjectCopy.getString("error_code"));
             JSONObject words_result = jsonObject.getJSONObject("words_result");
             String plate = words_result.getString("number");
             System.out.println("车牌：" + plate);
@@ -86,7 +90,12 @@ public class PlateAPITest {
             // return platek;
         } catch (Exception e) {
             e.printStackTrace();
-            return "fail";
+//            JSONObject words_result1 = jsonObjectCopy.getJSONObject("error_code");
+            // 出现错误，返回错误吗
+            System.out.println(jsonObjectCopy);
+            String plate = jsonObjectCopy.getString("error_code");
+            System.out.println("错误码：" + plate);
+            return plate;
         }
 
 
