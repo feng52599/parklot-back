@@ -60,9 +60,9 @@ public class ParkingUserController {
     @PostMapping("api/parkuser/merge")
     public ParkingUser merge(@RequestBody ParkingUser parkingUser) {
         System.out.println("useriddddd" + parkingUser.getId() + "name" + parkingUser.getUsername());
-        if ((parkingUser.getId() == null) || (parkingUser.getId() == 0)){
+        if ((null == parkingUser.getId() || (parkingUser.getId() == 0))){
             parkingUserService.save(parkingUser);
-        }else {
+        } else {
                 parkingUserService.updateById(parkingUser);
         }
         return parkingUser;
