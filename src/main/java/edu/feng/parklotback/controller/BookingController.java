@@ -30,12 +30,14 @@ public class BookingController {
     @CrossOrigin
     @PostMapping("/api/booking/merge")
     public Booking merge(@RequestBody Booking booking) {
-        System.out.println("useriddddd" + booking.getId() + "name" + booking.getBookingTime() + "plate"+ booking.getPlate()+"phone" +"-----");
+        System.out.println("useriddddd" + booking.getId() + "name afadfadfsafese" + booking.getBookingTime() + "plate"+ booking.getPlate()+"phone" + booking.getPhone());
         if ((booking.getId() == null) || (booking.getId() == 0)){
             bookingService.save(booking);
             // 新增时更新预约状态
             parkingUserService.editByPlate(booking.getPlate());
         }else {
+            System.out.println("heeeloo");
+            System.out.println("ddd");
             bookingService.updateById(booking);
         }
         return booking;
