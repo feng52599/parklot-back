@@ -36,6 +36,8 @@ public class BookingController {
             // 新增时更新预约状态
             parkingUserService.editByPlate(booking.getPlate());
         }else {
+            System.out.println("heeeloo");
+            System.out.println("ddd");
             bookingService.updateById(booking);
         }
         return booking;
