@@ -26,9 +26,10 @@ public class ClientUserController {
         if ((clientUser.getId() == null) || (clientUser.getId() == 0)){
             clientUserService.save(clientUser);
         }else {
-            clientUserService.updateById(clientUser);
+            System.out.println("000000");
         }
         return clientUser;
+
     }
 
     @CrossOrigin
